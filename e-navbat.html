@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Navbat — Elektron Poliklinika</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gr:#0a6e5e;--grl:#0d8a75;--grd:#064d42;
+  --or:#f5a623;--rd:#e74c6e;--pu:#6c5ce7;--bl:#2980b9;
+  --bg:#f0f6f5;--wh:#fff;--tx:#1a2e2b;--mu:#6b8c87;--bo:#d0e8e4;
+  --sh:0 4px 24px rgba(10,110,94,.10);--sh2:0 8px 40px rgba(10,110,94,.16);
+  --ra:14px;--sw:240px;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+
+/* LOGIN */
+#pgLogin{min-height:100vh;background:linear-gradient(135deg,#064d42 0%,#0a6e5e 50%,#0d9e87 100%);display:flex;align-items:center;justify-content:center}
+.lbox{background:#fff;border-radius:24px;padding:48px 42px;width:420px;max-width:94vw;box-shadow:0 30px 80px rgba(0,0,0,.22);animation:up .5s ease}
+@keyframes up{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+.llogo{text-align:center;margin-bottom:30px}
+.licon{width:66px;height:66px;background:linear-gradient(135deg,var(--gr),var(--grl));border-radius:18px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 8px 20px rgba(10,110,94,.28)}
+.licon svg{width:34px;height:34px;fill:#fff}
+.llogo h1{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--grd)}
+.llogo p{font-size:.82rem;color:var(--mu);margin-top:3px}
+.ltabs{display:flex;background:var(--bg);border-radius:11px;padding:4px;margin-bottom:24px;gap:3px}
+.ltab{flex:1;padding:9px;border:none;background:transparent;border-radius:8px;font-family:inherit;font-size:.86rem;font-weight:700;color:var(--mu);cursor:pointer;transition:all .2s}
+.ltab.on{background:#fff;color:var(--gr);box-shadow:0 2px 8px rgba(0,0,0,.09)}
+.lfg{margin-bottom:15px}
+.lfg label{display:block;font-size:.73rem;font-weight:800;color:var(--mu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.lfg input{width:100%;padding:12px 14px;border:2px solid var(--bo);border-radius:10px;font-family:inherit;font-size:.92rem;color:var(--tx);outline:none;transition:border .2s}
+.lfg input:focus{border-color:var(--gr)}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gr),var(--grl));color:#fff;border:none;border-radius:11px;font-family:inherit;font-size:.96rem;font-weight:800;cursor:pointer;transition:all .2s;margin-top:4px}
+.lbtn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,110,94,.32)}
+.lfoot{text-align:center;margin-top:14px;font-size:.79rem;color:var(--mu)}
+
+/* APP SHELL */
+#pgApp{display:none}
+.hdr{background:#fff;height:62px;display:flex;align-items:center;padding:0 22px;gap:12px;box-shadow:0 2px 12px rgba(10,110,94,.08);position:sticky;top:0;z-index:100}
+.hdr-logo{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--grd);flex:1}
+.hdr-logo span{color:var(--gr)}
+.role-badge{padding:4px 11px;border-radius:50px;font-size:.73rem;font-weight:800}
+.hdr-bell{width:38px;height:38px;border-radius:50%;border:none;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:background .2s}
+.hdr-bell:hover{background:var(--bo)}
+.hdr-bell svg{width:18px;height:18px;stroke:var(--mu);fill:none;stroke-width:2}
+.nbadge{position:absolute;top:6px;right:6px;width:9px;height:9px;background:var(--rd);border-radius:50%;border:2px solid #fff}
+.hdr-user{display:flex;align-items:center;gap:9px;background:var(--bg);padding:7px 13px;border-radius:50px;cursor:pointer}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gr),var(--or));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.78rem;flex-shrink:0}
+.hdr-user span{font-weight:700;font-size:.84rem}
+.logout-btn{padding:7px 15px;background:transparent;border:2px solid var(--bo);border-radius:50px;font-family:inherit;font-size:.78rem;font-weight:700;color:var(--mu);cursor:pointer;transition:all .2s}
+.logout-btn:hover{border-color:var(--rd);color:var(--rd)}
+
+/* LAYOUT */
+.wrap{display:flex;min-height:calc(100vh - 62px)}
+.sb{width:var(--sw);background:#fff;min-height:calc(100vh - 62px);padding:18px 0;border-right:1px solid var(--bo);position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;flex-shrink:0}
+.sb-lbl{font-size:.67rem;font-weight:800;color:var(--mu);text-transform:uppercase;letter-spacing:1px;padding:10px 20px 4px}
+.sb-it{display:flex;align-items:center;gap:10px;padding:11px 20px;cursor:pointer;color:var(--mu);font-weight:600;font-size:.87rem;transition:all .2s;border-left:3px solid transparent;position:relative}
+.sb-it:hover{background:var(--bg);color:var(--gr)}
+.sb-it.on{background:linear-gradient(90deg,rgba(10,110,94,.09),transparent);color:var(--gr);border-left-color:var(--gr)}
+.sb-it svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--rd);color:#fff;font-size:.67rem;font-weight:800;padding:2px 7px;border-radius:50px}
+.main{flex:1;padding:26px;overflow-y:auto}
+
+/* PAGES */
+.pg{display:none}
+.pg.on{display:block;animation:fi .28s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+.ph h2{font-family:'Playfair Display',serif;font-size:1.6rem}
+.ph p{font-size:.82rem;color:var(--mu);margin-top:2px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.sc{background:#fff;border-radius:var(--ra);padding:18px 20px;box-shadow:var(--sh);border:1px solid var(--bo);transition:transform .2s;cursor:default}
+.sc:hover{transform:translateY(-3px)}
+.sci{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.sci svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.sc-g{background:rgba(10,110,94,.11);color:var(--gr)}
+.sc-o{background:rgba(245,166,35,.13);color:#c27800}
+.sc-r{background:rgba(231,76,110,.12);color:var(--rd)}
+.sc-p{background:rgba(108,92,231,.12);color:var(--pu)}
+.sc h3{font-size:1.85rem;font-weight:900;line-height:1}
+.sc span{font-size:.79rem;color:var(--mu);font-weight:600;display:block;margin-top:4px}
+.sc small{font-size:.74rem;font-weight:700;margin-top:6px;display:block}
+.sc small.up{color:#27ae60}.sc small.dn{color:var(--rd)}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* CARD */
+.card{background:#fff;border-radius:var(--ra);box-shadow:var(--sh);border:1px solid var(--bo)}
+.card-h{padding:15px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bo)}
+.card-h strong{font-size:.94rem;font-weight:800}
+.card-b{padding:20px}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th{background:var(--bg);padding:10px 16px;text-align:left;font-size:.71rem;font-weight:800;color:var(--mu);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--bo);font-size:.85rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(10,110,94,.025)}
+
+/* BADGE */
+.b{display:inline-block;padding:3px 9px;border-radius:50px;font-size:.7rem;font-weight:800;white-space:nowrap}
+.b-g{background:rgba(39,174,96,.12);color:#27ae60}
+.b-o{background:rgba(245,166,35,.14);color:#c27800}
+.b-r{background:rgba(231,76,110,.12);color:var(--rd)}
+.b-b{background:rgba(41,128,185,.12);color:var(--bl)}
+.b-x{background:rgba(0,0,0,.07);color:#666}
+.b-p{background:rgba(108,92,231,.12);color:var(--pu)}
+
+/* BUTTONS */
+.btn{padding:9px 16px;border-radius:9px;font-family:inherit;font-size:.83rem;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;transition:all .18s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-p{background:var(--gr);color:#fff}
+.btn-p:hover{background:var(--grl);transform:translateY(-1px)}
+.btn-sm{padding:5px 12px;font-size:.76rem;border-radius:7px}
+.btn-ol{background:transparent;border:2px solid var(--bo);color:var(--mu)}
+.btn-ol:hover{border-color:var(--gr);color:var(--gr)}
+.btn-rd{background:rgba(231,76,110,.1);color:var(--rd)}
+.btn-rd:hover{background:var(--rd);color:#fff}
+.btn-gn{background:rgba(39,174,96,.1);color:#27ae60}
+.btn-gn:hover{background:#27ae60;color:#fff}
+.btn-or{background:rgba(245,166,35,.12);color:#c27800}
+.btn-or:hover{background:var(--or);color:#fff}
+.act{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
+/* FORM */
+.fcard{background:#fff;border-radius:var(--ra);padding:22px;box-shadow:var(--sh);border:1px solid var(--bo)}
+.fcard h3{font-size:.96rem;font-weight:800;margin-bottom:16px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:.73rem;font-weight:800;color:var(--mu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 13px;border:2px solid var(--bo);border-radius:9px;font-family:inherit;font-size:.87rem;color:var(--tx);outline:none;transition:border .2s;background:#fff}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gr)}
+.fg textarea{resize:vertical;min-height:74px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* DOCTOR CARDS */
+.dcards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.dc{background:#fff;border-radius:var(--ra);padding:20px;box-shadow:var(--sh);border:1px solid var(--bo);text-align:center;transition:transform .2s}
+.dc:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.dav{width:62px;height:62px;border-radius:50%;margin:0 auto 11px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--gr),var(--grl))}
+.dc h4{font-weight:800;font-size:.9rem;margin-bottom:3px}
+.dc p{font-size:.75rem;color:var(--mu);margin-bottom:10px}
+.slots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:11px}
+.slot{padding:5px 9px;border-radius:7px;border:1px solid var(--bo);font-size:.72rem;font-weight:700;cursor:pointer;transition:all .15s;background:#fff}
+.slot:hover,.slot.on{background:var(--gr);color:#fff;border-color:var(--gr)}
+.slot.taken{background:var(--bg);color:var(--mu);cursor:not-allowed;text-decoration:line-through}
+
+/* STEPS */
+.steps{display:flex;margin-bottom:22px}
+.step{flex:1;display:flex;align-items:center;gap:8px;padding:12px 15px;background:#fff;border:1px solid var(--bo)}
+.step:first-child{border-radius:11px 0 0 11px}
+.step:last-child{border-radius:0 11px 11px 0}
+.step-n{width:27px;height:27px;border-radius:50%;background:var(--bo);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:var(--mu);flex-shrink:0}
+.step.done .step-n{background:var(--gr);color:#fff}
+.step.cur .step-n{background:var(--or);color:#fff}
+.step-t{font-size:.79rem;font-weight:700;color:var(--mu)}
+.step.done .step-t,.step.cur .step-t{color:var(--tx)}
+
+/* RECEIPT */
+.rc{background:#fff;border-radius:var(--ra);overflow:hidden;box-shadow:var(--sh);border:1px solid var(--bo)}
+.rc-h{padding:17px 20px;display:flex;align-items:center;gap:11px;color:#fff}
+.rc-h-icon{width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.rc-h strong{font-weight:800;font-size:.95rem}
+.rc-h small{font-size:.75rem;opacity:.8}
+.rc-b{padding:18px 20px}
+.rc-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo);font-size:.85rem}
+.rc-row:last-child{border-bottom:none}
+.rc-row label{color:var(--mu);font-weight:700}
+.rdrug{background:var(--bg);border-radius:8px;padding:10px 13px;margin-bottom:7px}
+.rdrug strong{font-size:.88rem;display:block}
+.rdrug small{color:var(--mu);font-size:.74rem}
+
+/* CALENDAR */
+.cal{background:#fff;border-radius:var(--ra);padding:18px;border:1px solid var(--bo);box-shadow:var(--sh)}
+.cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;font-weight:800}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dl{text-align:center;font-size:.68rem;font-weight:800;color:var(--mu);padding:3px 0}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;transition:background .15s;position:relative}
+.cal-d:hover{background:var(--bg)}
+.cal-d.today{background:var(--gr);color:#fff}
+.cal-d.ev::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--or);border-radius:50%}
+.cal-d.om{color:var(--bo)}
+
+/* CHART BARS */
+.cbars{padding:14px 0}
+.cbar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cbar-lbl{width:90px;font-size:.76rem;font-weight:700;color:var(--mu);text-align:right;flex-shrink:0}
+.cbar-bg{flex:1;background:var(--bg);border-radius:50px;height:14px;overflow:hidden}
+.cbar-f{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--gr),var(--grl));transition:width 1.2s ease}
+.cbar-val{width:30px;font-size:.76rem;font-weight:800;color:var(--tx)}
+
+/* SWITCH */
+.sw{width:40px;height:22px;border-radius:50px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.sw-dot{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;transition:left .2s}
+.sw.on{background:var(--gr)}.sw.on .sw-dot{left:21px}
+.sw.off{background:var(--bo)}.sw.off .sw-dot{left:3px}
+
+/* PROGRESS */
+.prog{background:var(--bg);border-radius:50px;height:7px;overflow:hidden;margin-top:5px}
+.prog-f{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--gr),var(--grl))}
+
+/* SEARCH */
+.sbar{display:flex;gap:10px;margin-bottom:16px}
+.sinp{flex:1;padding:10px 14px;border:2px solid var(--bo);border-radius:9px;font-family:inherit;font-size:.87rem;outline:none;transition:border .2s;background:#fff}
+.sinp:focus{border-color:var(--gr)}
+.sinp-s{flex:0 0 auto;padding:10px 13px;border:2px solid var(--bo);border-radius:9px;font-family:inherit;font-size:.87rem;outline:none;background:#fff}
+
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .2s}
+.ov.on{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:18px;padding:30px;width:480px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.2);transform:translateY(20px);transition:transform .25s}
+.ov.on .modal{transform:translateY(0)}
+.modal h3{font-size:1.1rem;font-weight:800;margin-bottom:16px}
+.m-act{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* CONFIRM */
+.conf-box{background:#fff;border-radius:16px;padding:28px;width:340px;max-width:90vw;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.2);transform:translateY(20px);transition:transform .25s}
+.ov.on .conf-box{transform:translateY(0)}
+.conf-box h4{font-size:1.02rem;font-weight:800;margin-bottom:8px}
+.conf-box p{font-size:.84rem;color:var(--mu);margin-bottom:18px}
+.conf-box .act{display:flex;gap:10px;justify-content:center}
+
+/* TOAST */
+#toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--grd);color:#fff;padding:12px 20px;border-radius:11px;font-weight:700;font-size:.87rem;box-shadow:0 8px 28px rgba(0,0,0,.18);display:none;align-items:center;gap:8px;max-width:320px}
+#toast.on{display:flex;animation:tr .28s ease}
+@keyframes tr{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+
+/* NOTIF PANEL */
+#notifPanel{position:fixed;top:62px;right:20px;z-index:500;background:#fff;border-radius:14px;padding:16px;width:300px;box-shadow:0 8px 32px rgba(0,0,0,.14);border:1px solid var(--bo);display:none}
+#notifPanel.on{display:block;animation:fi .2s ease}
+.notif-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--bo);font-size:.83rem}
+.notif-item:last-child{border-bottom:none}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--gr);flex-shrink:0;margin-top:5px}
+
+/* INFO ROW */
+.irow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--bo);font-size:.85rem}
+.irow:last-child{border-bottom:none}
+.irow label{color:var(--mu);font-weight:700;min-width:110px}
+.irow span{font-weight:700;text-align:right}
+
+/* TIP CARD */
+.tip{display:flex;gap:10px;align-items:flex-start;padding:11px;border-radius:11px;margin-bottom:9px}
+.tip strong{font-size:.85rem;display:block;margin-bottom:2px}
+.tip p{font-size:.75rem;color:var(--mu)}
+
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.dcards{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}.sb{display:none}}
+@media(max-width:600px){.stats{grid-template-columns:1fr}.g2,.frow,.dcards,.g3,.g4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ======== LOGIN ======== -->
+<div id="pgLogin">
+  <div class="lbox">
+    <div class="llogo">
+      <div class="licon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 14h-2v-4H7l5-5 5 5h-4v4z"/></svg>
+      </div>
+      <h1>E-Navbat</h1>
+      <p>Elektron poliklinika tizimi</p>
+    </div>
+    <div class="ltabs">
+      <button class="ltab on" id="tab-b" onclick="setTab('patient')">👤 Bemor</button>
+      <button class="ltab" id="tab-d" onclick="setTab('doctor')">🩺 Shifokor</button>
+      <button class="ltab" id="tab-a" onclick="setTab('admin')">🛠️ Admin</button>
+    </div>
+    <div class="lfg"><label>Login / Telefon</label><input id="l-inp" type="text" value="+998901234567" placeholder="+998 90 123 45 67"></div>
+    <div class="lfg"><label>Parol</label><input id="l-pass" type="password" value="123456" placeholder="••••••••"></div>
+    <button class="lbtn" onclick="doLogin()">Kirish →</button>
+    <div class="lfoot">Sinov uchun istalgan parolni kiriting</div>
+  </div>
+</div>
+
+<!-- ======== APP ======== -->
+<div id="pgApp">
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-logo">E-<span>Navbat</span></div>
+    <span class="role-badge" id="hRoleBadge"></span>
+    <button class="hdr-bell" onclick="toggleNotif()">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="nbadge"></span>
+    </button>
+    <div class="hdr-user">
+      <div class="av" id="hAv">A</div>
+      <span id="hName">Foydalanuvchi</span>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">Chiqish</button>
+  </div>
+
+  <!-- NOTIF PANEL -->
+  <div id="notifPanel">
+    <div style="font-weight:800;margin-bottom:12px">🔔 Bildirishnomalar</div>
+    <div class="notif-item"><div class="notif-dot"></div><div><strong style="font-weight:700">Navbat tasdiqlandi</strong><div style="color:var(--mu);font-size:.78rem">Dr. Yusupov · 25.03.2026 · 10:30</div></div></div>
+    <div class="notif-item"><div class="notif-dot"></div><div><strong style="font-weight:700">Retsept tayyor</strong><div style="color:var(--mu);font-size:.78rem">Amoxicillin 500mg yozildi</div></div></div>
+    <div class="notif-item"><div class="notif-dot" style="background:var(--or)"></div><div><strong style="font-weight:700">Eslatma</strong><div style="color:var(--mu);font-size:.78rem">Ertaga 08:00 da navbat bor</div></div></div>
+  </div>
+
+  <div class="wrap">
+    <!-- SIDEBAR -->
+    <div class="sb" id="sb"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+      <!-- ================================================ -->
+      <!-- BEMOR SAHIFALARI -->
+      <!-- ================================================ -->
+
+      <!-- B: DASHBOARD -->
+      <div class="pg" id="pg-bd">
+        <div class="ph">
+          <div><h2 id="b-greet">Salom! 👋</h2><p>23 Mart 2026, Dushanba · Sog'ligingizga e'tibor bering</p></div>
+          <button class="btn btn-p" onclick="nav('bn')">
+            <svg width="14" height="14" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Navbat olish
+          </button>
+        </div>
+        <div class="stats">
+          <div class="sc"><div class="sci sc-g"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h3>3</h3><span>Kelgusi navbatlar</span><small class="up">↑ 1 ta bugun</small></div>
+          <div class="sc"><div class="sci sc-o"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg></div><h3>5</h3><span>Retseptlarim</span><small class="up">2 ta faol</small></div>
+          <div class="sc"><div class="sci sc-r"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3>12</h3><span>Jami tashriflar</span><small class="up">Bu yilda</small></div>
+          <div class="sc"><div class="sci sc-p"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.62 4.34 2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.09 6.09l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><h3>103</h3><span>Tez yordam raqami</span><small class="up">24/7 mavjud</small></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-h"><strong>📅 Kelgusi navbatlarim</strong><button class="btn btn-sm btn-ol" onclick="nav('bm')">Barchasi</button></div>
+            <table>
+              <tr><th>Shifokor</th><th>Sana</th><th>Vaqt</th><th>Holat</th></tr>
+              <tr><td><b>Dr. Yusupov A.</b><br><small style="color:var(--mu)">Kardiolog</small></td><td>25.03.2026</td><td>10:30</td><td><span class="b b-g">Tasdiqlangan</span></td></tr>
+              <tr><td><b>Dr. Nazarova Z.</b><br><small style="color:var(--mu)">Terapevt</small></td><td>28.03.2026</td><td>09:00</td><td><span class="b b-o">Kutilmoqda</span></td></tr>
+              <tr><td><b>Dr. Xoliqov B.</b><br><small style="color:var(--mu)">Jarroх</small></td><td>02.04.2026</td><td>08:30</td><td><span class="b b-o">Kutilmoqda</span></td></tr>
+            </table>
+          </div>
+          <div class="cal">
+            <div class="cal-hd">
+              <button class="btn btn-sm btn-ol" onclick="toast('◀ Oldingi oy')">◀</button>
+              <span>Mart 2026</span>
+              <button class="btn btn-sm btn-ol" onclick="toast('▶ Keyingi oy')">▶</button>
+            </div>
+            <div class="cal-grid" id="cal1"></div>
+          </div>
+        </div>
+        <div class="g2" style="margin-top:18px">
+          <div class="rc">
+            <div class="rc-h" style="background:linear-gradient(135deg,var(--grd),var(--gr))">
+              <div class="rc-h-icon">💊</div>
+              <div><strong>Faol retsept</strong><br><small>Dr. Nazarova · 20.03.2026</small></div>
+              <button class="btn btn-sm" style="margin-left:auto;background:rgba(255,255,255,.2);color:#fff;border:none" onclick="nav('br')">Ko'rish</button>
+            </div>
+            <div class="rc-b">
+              <div class="rdrug"><strong>Amoxicillin 500mg</strong><small>3 marta × 1 ta · 7 kun · 4 kun qoldi</small></div>
+              <div class="rdrug"><strong>Bromhexin 8mg</strong><small>3 marta × 1 ta · 5 kun · 2 kun qoldi</small></div>
+              <div style="margin-top:12px"><div style="font-size:.75rem;font-weight:700;color:var(--mu);margin-bottom:4px">Kurs bajarish holati:</div><div class="prog"><div class="prog-f" style="width:57%"></div></div></div>
+            </div>
+          </div>
+          <div class="fcard">
+            <h3>💡 Sog'liq maslahatlar</h3>
+            <div class="tip" style="background:rgba(10,110,94,.06)"><span style="font-size:1.3rem">🚶</span><div><strong>Kunlik yurish</strong><p>Kuniga 30 daqiqa yurish yurak salomatligini yaxshilaydi</p></div></div>
+            <div class="tip" style="background:rgba(245,166,35,.08)"><span style="font-size:1.3rem">💧</span><div><strong>Suv iste'moli</strong><p>Kuniga kamida 2 litr toza suv iching</p></div></div>
+            <div class="tip" style="background:rgba(108,92,231,.06)"><span style="font-size:1.3rem">😴</span><div><strong>Uyqu tartibi</strong><p>Har kuni 7-8 soat uxlash immunitetni mustahkamlaydi</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B: NAVBAT OLISH -->
+      <div class="pg" id="pg-bn">
+        <div class="ph"><div><h2>Navbat olish</h2><p>Shifokor tanlang va qulay vaqtni belgilang</p></div></div>
+        <div class="steps">
+          <div class="step done"><div class="step-n">✓</div><div class="step-t">Mutaxassislik</div></div>
+          <div class="step cur"><div class="step-n">2</div><div class="step-t">Shifokor & Vaqt</div></div>
+          <div class="step"><div class="step-n">3</div><div class="step-t">Tasdiqlash</div></div>
+        </div>
+        <div class="fcard" style="margin-bottom:18px">
+          <h3>1️⃣ Mutaxassislikni tanlang</h3>
+          <div class="g3" id="specGrid" style="gap:9px">
+            <div class="slot" style="padding:11px;text-align:center;border-radius:11px" onclick="pickSpec(this,'Kardiolog')">🫀 Kardiolog</div>
+            <div class="slot" style="padding:11px;text-align:center;border-radius:11px" onclick="pickSpec(this,'Terapevt')">🩺 Terapevt</div>
+            <div class="slot" style="padding:11px;text-align:center;border-radius:11px" onclick="pickSpec(this,'Jarroх')">🔪 Jarroх</div>
+            <div class="slot" style="padding:11px;text-align:center;border-radius:11px" onclick="pickSpec(this,'Nevropatolog')">🧠 Nevropatolog</div>
+            <div class="slot" style="padding:11px;text-align:center;border-radius:11px" onclick="pickSpec(this,'Okulist')">👁️ Okulist</div>
+            <div class="slot" style="padding:11px;text-align:center;border-radius:11px" onclick="pickSpec(this,'Stomatolog')">🦷 Stomatolog</div>
+          </div>
+        </div>
+        <div class="dcards">
+          <div class="dc">
+            <div class="dav">YA</div><h4>Dr. Yusupov Alisher</h4><p>Kardiolog · 12 yil · ★ 4.9</p>
+            <div class="slots" id="sl-ya">
+              <div class="slot" onclick="pickSlot(this,'ya','09:00')">09:00</div>
+              <div class="slot" onclick="pickSlot(this,'ya','09:30')">09:30</div>
+              <div class="slot taken">10:00</div>
+              <div class="slot" onclick="pickSlot(this,'ya','10:30')">10:30</div>
+              <div class="slot taken">11:00</div>
+              <div class="slot" onclick="pickSlot(this,'ya','11:30')">11:30</div>
+            </div>
+            <button class="btn btn-p" style="width:100%" onclick="openBook('Dr. Yusupov Alisher','ya')">Yozilish</button>
+          </div>
+          <div class="dc">
+            <div class="dav" style="background:linear-gradient(135deg,#e74c6e,#f5a623)">NZ</div><h4>Dr. Nazarova Zilola</h4><p>Terapevt · 8 yil · ★ 4.7</p>
+            <div class="slots" id="sl-nz">
+              <div class="slot taken">09:00</div>
+              <div class="slot" onclick="pickSlot(this,'nz','09:30')">09:30</div>
+              <div class="slot" onclick="pickSlot(this,'nz','10:00')">10:00</div>
+              <div class="slot taken">10:30</div>
+              <div class="slot" onclick="pickSlot(this,'nz','11:00')">11:00</div>
+              <div class="slot" onclick="pickSlot(this,'nz','14:00')">14:00</div>
+            </div>
+            <button class="btn btn-p" style="width:100%" onclick="openBook('Dr. Nazarova Zilola','nz')">Yozilish</button>
+          </div>
+          <div class="dc">
+            <div class="dav" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">XB</div><h4>Dr. Xoliqov Bobur</h4><p>Jarroх · 15 yil · ★ 5.0</p>
+            <div class="slots" id="sl-xb">
+              <div class="slot" onclick="pickSlot(this,'xb','08:00')">08:00</div>
+              <div class="slot" onclick="pickSlot(this,'xb','08:30')">08:30</div>
+              <div class="slot taken">09:00</div>
+              <div class="slot taken">09:30</div>
+              <div class="slot" onclick="pickSlot(this,'xb','13:00')">13:00</div>
+              <div class="slot" onclick="pickSlot(this,'xb','13:30')">13:30</div>
+            </div>
+            <button class="btn btn-p" style="width:100%" onclick="openBook('Dr. Xoliqov Bobur','xb')">Yozilish</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- B: NAVBATLARIM -->
+      <div class="pg" id="pg-bm">
+        <div class="ph"><div><h2>Mening navbatlarim</h2><p>Barcha yozilgan navbatlaringiz</p></div><button class="btn btn-p" onclick="nav('bn')">+ Yangi navbat</button></div>
+        <div class="sbar">
+          <input class="sinp" placeholder="Shifokor, sana..." oninput="filterRows('recTbl',this.value)">
+          <select class="sinp-s" onchange="filterByStatus('recTbl',this.value)">
+            <option value="">Barcha holat</option>
+            <option>Tasdiqlangan</option><option>Kutilmoqda</option><option>Tugallangan</option><option>Bekor qilingan</option>
+          </select>
+        </div>
+        <div class="card">
+          <table id="recTbl">
+            <tr><th>#</th><th>Shifokor</th><th>Sana & Vaqt</th><th>Holat</th><th>Amallar</th></tr>
+            <tr class="tr"><td>#1042</td><td><b>Dr. Yusupov A.</b><br><small style="color:var(--mu)">Kardiolog</small></td><td>25.03.2026 · 10:30</td><td><span class="b b-g status">Tasdiqlangan</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="showInfo('#1042','Dr. Yusupov A.','25.03.2026 · 10:30','Yurak og\'rig\'i')">Ko'rish</button><button class="btn btn-sm btn-rd" onclick="cancelRec(this)">Bekor</button></td></tr>
+            <tr class="tr"><td>#1038</td><td><b>Dr. Nazarova Z.</b><br><small style="color:var(--mu)">Terapevt</small></td><td>20.03.2026 · 09:30</td><td><span class="b b-b status">Tugallangan</span></td><td class="act"><button class="btn btn-sm btn-or" onclick="openRate('Dr. Nazarova Zilola')">⭐ Baholash</button></td></tr>
+            <tr class="tr"><td>#1031</td><td><b>Dr. Xoliqov B.</b><br><small style="color:var(--mu)">Jarroх</small></td><td>15.03.2026 · 08:00</td><td><span class="b b-b status">Tugallangan</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="nav('br')">💊 Retsept</button><button class="btn btn-sm btn-or" onclick="openRate('Dr. Xoliqov Bobur')">⭐ Baholash</button></td></tr>
+            <tr class="tr"><td>#1025</td><td><b>Dr. Yusupov A.</b><br><small style="color:var(--mu)">Kardiolog</small></td><td>10.03.2026 · 11:00</td><td><span class="b b-r status">Bekor qilingan</span></td><td class="act"><button class="btn btn-sm btn-p" onclick="nav('bn')">Qayta yozilish</button></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- B: RETSEPTLAR -->
+      <div class="pg" id="pg-br">
+        <div class="ph"><div><h2>Retseptlar tarixi</h2><p>Barcha elektron retseptlaringiz</p></div></div>
+        <div class="g2">
+          <div class="rc">
+            <div class="rc-h" style="background:linear-gradient(135deg,var(--grd),var(--gr))">
+              <div class="rc-h-icon">💊</div>
+              <div><strong>Retsept #R-2024</strong><br><small>20.03.2026 · Dr. Nazarova Z.</small></div>
+              <button class="btn btn-sm" style="margin-left:auto;background:rgba(255,255,255,.2);color:#fff;border:none" onclick="toast('⬇ Retsept #R-2024 yuklanmoqda...')">⬇ Yuklab</button>
+            </div>
+            <div class="rc-b">
+              <div class="irow"><label>Tashxis</label><span>O'tkir bronxit (J20)</span></div>
+              <div style="margin:12px 0 8px;font-weight:800;font-size:.82rem">Tayinlangan dorilar:</div>
+              <div class="rdrug"><strong>Amoxicillin 500mg</strong><small>3 marta × 1 ta kapsul · 7 kun</small></div>
+              <div class="rdrug"><strong>Bromhexin 8mg</strong><small>3 marta × 1 ta tablet · 5 kun</small></div>
+              <div class="irow" style="margin-top:10px"><label>Holat</label><span><span class="b b-g">Faol</span></span></div>
+            </div>
+          </div>
+          <div class="rc">
+            <div class="rc-h" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">
+              <div class="rc-h-icon">💉</div>
+              <div><strong>Retsept #R-2019</strong><br><small>15.03.2026 · Dr. Xoliqov B.</small></div>
+              <button class="btn btn-sm" style="margin-left:auto;background:rgba(255,255,255,.2);color:#fff;border:none" onclick="toast('⬇ Retsept #R-2019 yuklanmoqda...')">⬇ Yuklab</button>
+            </div>
+            <div class="rc-b">
+              <div class="irow"><label>Tashxis</label><span>Appenditsit (K37)</span></div>
+              <div style="margin:12px 0 8px;font-weight:800;font-size:.82rem">Tayinlangan dorilar:</div>
+              <div class="rdrug"><strong>Ceftriaxone 1g</strong><small>2 marta × 1 ta · 5 kun (in/m)</small></div>
+              <div class="rdrug"><strong>Ketoprofen 100mg</strong><small>2 marta × 1 ta · 3 kun</small></div>
+              <div class="irow" style="margin-top:10px"><label>Holat</label><span><span class="b b-x">Tugagan</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B: PROFIL -->
+      <div class="pg" id="pg-bp">
+        <div class="ph"><div><h2>Mening profilim</h2><p>Shaxsiy ma'lumotlaringiz</p></div></div>
+        <div class="g2">
+          <div class="fcard">
+            <h3>👤 Shaxsiy ma'lumotlar</h3>
+            <div class="frow"><div class="fg"><label>Ism</label><input type="text" value="Aziz"></div><div class="fg"><label>Familiya</label><input type="text" value="Karimov"></div></div>
+            <div class="frow"><div class="fg"><label>Tug'ilgan sana</label><input type="date" value="1990-05-15"></div><div class="fg"><label>Jins</label><select><option>Erkak</option><option>Ayol</option></select></div></div>
+            <div class="fg"><label>Telefon</label><input type="tel" value="+998901234567"></div>
+            <div class="fg"><label>Manzil</label><input type="text" value="Toshkent sh., Mirzo Ulug'bek t."></div>
+            <button class="btn btn-p" onclick="toast('✅ Profil saqlandi!')">Saqlash ✓</button>
+          </div>
+          <div class="fcard">
+            <h3>🔐 Parolni o'zgartirish</h3>
+            <div class="fg"><label>Joriy parol</label><input type="password" placeholder="••••••••"></div>
+            <div class="fg"><label>Yangi parol</label><input type="password" placeholder="••••••••"></div>
+            <div class="fg"><label>Tasdiqlash</label><input type="password" placeholder="••••••••"></div>
+            <button class="btn btn-p" onclick="toast('🔐 Parol muvaffaqiyatli o\'zgartirildi!')">Yangilash ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- SHIFOKOR SAHIFALARI -->
+      <!-- ================================================ -->
+
+      <!-- D: DASHBOARD -->
+      <div class="pg" id="pg-dd">
+        <div class="ph">
+          <div><h2>Xush kelibsiz, Dr. Yusupov! 🩺</h2><p>23 Mart 2026 · Kardiolog · Xona: 205</p></div>
+          <button class="btn btn-p" onclick="openModal('mWriteRec')">
+            <svg width="14" height="14" viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Retsept yozish
+          </button>
+        </div>
+        <div class="stats">
+          <div class="sc"><div class="sci sc-g"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h3>9</h3><span>Bugungi qabullar</span><small class="up">5 ta tugallangan</small></div>
+          <div class="sc"><div class="sci sc-o"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>14:30</h3><span>Keyingi qabul</span><small class="up">30 daqiqadan so'ng</small></div>
+          <div class="sc"><div class="sci sc-r"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg></div><h3>47</h3><span>Bu oygi retseptlar</span><small class="up">↑ +8 o'tgan oyga</small></div>
+          <div class="sc"><div class="sci sc-p"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3>4.9</h3><span>Bemor bahosi</span><small class="up">★ 127 ta baho</small></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-h"><strong>🗓️ Bugungi qabul jadvali</strong><span class="b b-o">4 ta qoldi</span></div>
+            <table>
+              <tr><th>Bemor</th><th>Vaqt</th><th>Muammo</th><th>Holat</th><th>Amal</th></tr>
+              <tr><td><b>Aziz Karimov</b><br><small style="color:var(--mu)">#P001 · 35 yosh</small></td><td>09:00</td><td>Yurak og'rig'i</td><td><span class="b b-b">Tugallandi</span></td><td><button class="btn btn-sm btn-ol" onclick="openPatCard('Aziz Karimov',35,'Yurak og\'rig\'i','Gipertoniya 1-daraja')">Karta</button></td></tr>
+              <tr><td><b>Malika Tosheva</b><br><small style="color:var(--mu)">#P002 · 40 yosh</small></td><td>09:30</td><td>Qon bosimi</td><td><span class="b b-b">Tugallandi</span></td><td><button class="btn btn-sm btn-ol" onclick="openPatCard('Malika Tosheva',40,'Qon bosimi','Arterial gipertoniya')">Karta</button></td></tr>
+              <tr><td><b>Sarvar Normatov</b><br><small style="color:var(--mu)">#P015 · 52 yosh</small></td><td>14:00</td><td>Nazorat</td><td><span class="b b-o">Kutilmoqda</span></td><td><button class="btn btn-sm btn-p" onclick="startRecep('Sarvar Normatov')">Qabul boshlash</button></td></tr>
+              <tr><td><b>Nodira Xasanova</b><br><small style="color:var(--mu)">#P031 · 28 yosh</small></td><td>14:30</td><td>Birinchi qabul</td><td><span class="b b-o">Kutilmoqda</span></td><td><button class="btn btn-sm btn-p" onclick="startRecep('Nodira Xasanova')">Qabul boshlash</button></td></tr>
+              <tr><td><b>Bobur Mirzayev</b><br><small style="color:var(--mu)">#P044 · 61 yosh</small></td><td>15:00</td><td>EKG natijasi</td><td><span class="b b-x">Ro'yxatda</span></td><td><button class="btn btn-sm btn-ol" onclick="openPatCard('Bobur Mirzayev',61,'EKG natijasi','Aritmiya')">Karta</button></td></tr>
+            </table>
+          </div>
+          <div class="cal">
+            <div class="cal-hd"><button class="btn btn-sm btn-ol" onclick="toast('◀ Oldingi oy')">◀</button><span>Mart 2026</span><button class="btn btn-sm btn-ol" onclick="toast('▶ Keyingi oy')">▶</button></div>
+            <div class="cal-grid" id="cal2"></div>
+          </div>
+        </div>
+        <div class="g2" style="margin-top:18px">
+          <div class="card">
+            <div class="card-h"><strong>💊 So'nggi retseptlar</strong><button class="btn btn-sm btn-ol" onclick="nav('dr')">Barchasi</button></div>
+            <table>
+              <tr><th>Bemor</th><th>Dori</th><th>Sana</th><th>Holat</th></tr>
+              <tr><td><b>Aziz K.</b></td><td>Enalapril 10mg</td><td>23.03.2026</td><td><span class="b b-g">Faol</span></td></tr>
+              <tr><td><b>Malika T.</b></td><td>Amlodipine 5mg</td><td>23.03.2026</td><td><span class="b b-g">Faol</span></td></tr>
+              <tr><td><b>Jamshid R.</b></td><td>Aspirin 100mg</td><td>20.03.2026</td><td><span class="b b-g">Faol</span></td></tr>
+              <tr><td><b>Dilnoza U.</b></td><td>Bisoprolol 2.5mg</td><td>18.03.2026</td><td><span class="b b-x">Tugagan</span></td></tr>
+            </table>
+          </div>
+          <div class="fcard">
+            <h3>📈 Haftalik ko'rsatkich</h3>
+            <div class="cbars">
+              <div class="cbar-row"><div class="cbar-lbl">Dushanba</div><div class="cbar-bg"><div class="cbar-f" style="width:90%"></div></div><div class="cbar-val">9</div></div>
+              <div class="cbar-row"><div class="cbar-lbl">Seshanba</div><div class="cbar-bg"><div class="cbar-f" style="width:0%"></div></div><div class="cbar-val" style="color:var(--mu)">Dam</div></div>
+              <div class="cbar-row"><div class="cbar-lbl">Chorshanba</div><div class="cbar-bg"><div class="cbar-f" style="width:80%"></div></div><div class="cbar-val">8</div></div>
+              <div class="cbar-row"><div class="cbar-lbl">Payshanba</div><div class="cbar-bg"><div class="cbar-f" style="width:70%"></div></div><div class="cbar-val">7</div></div>
+              <div class="cbar-row"><div class="cbar-lbl">Juma</div><div class="cbar-bg"><div class="cbar-f" style="width:60%"></div></div><div class="cbar-val">6</div></div>
+              <div class="cbar-row"><div class="cbar-lbl">Shanba</div><div class="cbar-bg"><div class="cbar-f" style="width:40%"></div></div><div class="cbar-val">4</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D: RETSEPTLAR -->
+      <div class="pg" id="pg-dr">
+        <div class="ph"><div><h2>Retseptlar</h2><p>Yozilgan elektron retseptlar</p></div><button class="btn btn-p" onclick="openModal('mWriteRec')">+ Yangi retsept</button></div>
+        <div class="card">
+          <table>
+            <tr><th>#</th><th>Bemor</th><th>Tashxis</th><th>Dorilar</th><th>Sana</th><th>Holat</th><th>Amal</th></tr>
+            <tr><td>#R-2024</td><td><b>Aziz Karimov</b></td><td>O'tkir bronxit</td><td>Amoxicillin, Bromhexin</td><td>20.03.2026</td><td><span class="b b-g">Faol</span></td><td><button class="btn btn-sm btn-ol" onclick="viewRec('Aziz Karimov','O\'tkir bronxit (J20)','Amoxicillin 500mg · 3×1 · 7 kun\nBromhexin 8mg · 3×1 · 5 kun')">Ko'rish</button></td></tr>
+            <tr><td>#R-2019</td><td><b>Jamshid Rahimov</b></td><td>Appenditsit</td><td>Ceftriaxone, Ketoprofen</td><td>15.03.2026</td><td><span class="b b-x">Tugagan</span></td><td><button class="btn btn-sm btn-ol" onclick="viewRec('Jamshid Rahimov','Appenditsit (K37)','Ceftriaxone 1g · 2×1 · 5 kun\nKetoprofen 100mg · 2×1 · 3 kun')">Ko'rish</button></td></tr>
+            <tr><td>#R-2010</td><td><b>Malika Tosheva</b></td><td>Qon bosimi</td><td>Amlodipine, Enalapril</td><td>10.03.2026</td><td><span class="b b-g">Faol</span></td><td><button class="btn btn-sm btn-ol" onclick="viewRec('Malika Tosheva','Arterial gipertoniya','Amlodipine 5mg · 1×1 · doimiy\nEnalapril 10mg · 2×1 · doimiy')">Ko'rish</button></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- D: JADVAL -->
+      <div class="pg" id="pg-dj">
+        <div class="ph"><div><h2>Mening jadvalim</h2><p>Haftalik ish grafigi</p></div><button class="btn btn-p" onclick="openModal('mJadval')">✏️ Tahrirlash</button></div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-h"><strong>📅 Bu hafta (23–29 Mart)</strong></div>
+            <table>
+              <tr><th>Kun</th><th>Ish vaqti</th><th>Xona</th><th>Holat</th></tr>
+              <tr><td><b>Dushanba</b></td><td>08:00–14:00</td><td>205</td><td><span class="b b-g">Ish kuni</span></td></tr>
+              <tr><td><b>Seshanba</b></td><td>—</td><td>—</td><td><span class="b b-x">Dam olish</span></td></tr>
+              <tr><td><b>Chorshanba</b></td><td>08:00–14:00</td><td>205</td><td><span class="b b-g">Ish kuni</span></td></tr>
+              <tr><td><b>Payshanba</b></td><td>08:00–14:00</td><td>205</td><td><span class="b b-g">Ish kuni</span></td></tr>
+              <tr><td><b>Juma</b></td><td>08:00–14:00</td><td>205</td><td><span class="b b-g">Ish kuni</span></td></tr>
+              <tr><td><b>Shanba</b></td><td>09:00–12:00</td><td>205</td><td><span class="b b-o">Yarim kun</span></td></tr>
+            </table>
+          </div>
+          <div class="fcard">
+            <h3>📊 Bugungi holat</h3>
+            <div style="display:flex;flex-direction:column;gap:14px;padding:4px 0">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">Jami navbatlar:</span><span style="font-size:1.4rem;font-weight:900;color:var(--gr)">9</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">Tugallangan:</span><span style="font-size:1.2rem;font-weight:900;color:#27ae60">5</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">Qolgan:</span><span style="font-size:1.2rem;font-weight:900;color:var(--or)">4</span></div>
+              <div><div style="font-size:.76rem;font-weight:700;color:var(--mu);margin-bottom:4px">Bajarish:</div><div class="prog"><div class="prog-f" style="width:56%"></div></div></div>
+            </div>
+            <div style="margin-top:16px">
+              <div style="font-weight:800;font-size:.88rem;margin-bottom:10px">Ertangi navbatlar:</div>
+              <table><tr><th>Vaqt</th><th>Bemor</th><th>Muammo</th></tr>
+              <tr><td>08:00</td><td>Farrux T.</td><td>EKG tekshiruvi</td></tr>
+              <tr><td>08:30</td><td>Gulnora R.</td><td>Yurak UZI</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D: PROFIL -->
+      <div class="pg" id="pg-dp">
+        <div class="ph"><div><h2>Mening profilim</h2><p>Shifokor ma'lumotlari</p></div></div>
+        <div class="g2">
+          <div class="fcard">
+            <h3>🩺 Shifokor ma'lumotlari</h3>
+            <div class="frow"><div class="fg"><label>Ism</label><input type="text" value="Alisher"></div><div class="fg"><label>Familiya</label><input type="text" value="Yusupov"></div></div>
+            <div class="fg"><label>Mutaxassislik</label><select><option selected>Kardiolog</option><option>Terapevt</option><option>Jarroх</option><option>Nevropatolog</option></select></div>
+            <div class="frow"><div class="fg"><label>Xona</label><input type="text" value="205"></div><div class="fg"><label>Tajriba (yil)</label><input type="number" value="12"></div></div>
+            <div class="fg"><label>Telefon</label><input type="tel" value="+998901112233"></div>
+            <button class="btn btn-p" onclick="toast('✅ Ma\'lumotlar saqlandi!')">Saqlash ✓</button>
+          </div>
+          <div class="fcard">
+            <h3>📊 Mening ko'rsatkichlarim</h3>
+            <div style="text-align:center;padding:18px;background:linear-gradient(135deg,rgba(10,110,94,.07),rgba(10,110,94,.03));border-radius:12px;margin-bottom:14px">
+              <div style="font-size:2.8rem;font-weight:900;color:var(--gr)">4.9</div>
+              <div style="font-size:.82rem;color:var(--mu);font-weight:700">★★★★★ O'rtacha baho</div>
+              <div style="font-size:.75rem;color:var(--mu);margin-top:3px">127 ta bemor bahosi</div>
+            </div>
+            <div style="display:flex;justify-content:space-around;text-align:center">
+              <div><div style="font-size:1.5rem;font-weight:900;color:var(--gr)">248</div><div style="font-size:.74rem;color:var(--mu)">Bu oygi bemorlar</div></div>
+              <div><div style="font-size:1.5rem;font-weight:900;color:var(--or)">47</div><div style="font-size:.74rem;color:var(--mu)">Retseptlar</div></div>
+              <div><div style="font-size:1.5rem;font-weight:900;color:#27ae60">94%</div><div style="font-size:.74rem;color:var(--mu)">Tashrif koeff.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- ADMIN SAHIFALARI -->
+      <!-- ================================================ -->
+
+      <!-- A: DASHBOARD -->
+      <div class="pg" id="pg-ad">
+        <div class="ph"><div><h2>Admin Dashboard 🛠️</h2><p>23 Mart 2026 · Tizim holati: <span style="color:#27ae60;font-weight:800">✓ Ishlayapti</span></p></div><button class="btn btn-p" onclick="openModal('mAddPat')">+ Yangi bemor</button></div>
+        <div class="stats">
+          <div class="sc"><div class="sci sc-g"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>1,248</h3><span>Jami bemorlar</span><small class="up">↑ +12% bu oy</small></div>
+          <div class="sc"><div class="sci sc-o"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h3>47</h3><span>Bugungi navbatlar</span><small class="up">↑ +8 kechaga</small></div>
+          <div class="sc"><div class="sci sc-r"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4z"/></svg></div><h3>18</h3><span>Faol shifokorlar</span><small class="dn">↓ 2 ta ta'tilda</small></div>
+          <div class="sc"><div class="sci sc-p"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3>94%</h3><span>Tashrif koeffitsienti</span><small class="up">↑ +2% o'tgan oy</small></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-h"><strong>🗓️ Bugungi navbatlar</strong><button class="btn btn-sm btn-ol" onclick="nav('an')">Barchasi</button></div>
+            <table>
+              <tr><th>Bemor</th><th>Shifokor</th><th>Vaqt</th><th>Holat</th><th>Amal</th></tr>
+              <tr><td><b>Aziz Karimov</b></td><td>Dr. Yusupov</td><td>09:00</td><td><span class="b b-b">Tugallandi</span></td><td><button class="btn btn-sm btn-ol" onclick="showInfo('#001','Dr. Yusupov','09:00','Yurak og\'rig\'i')">Ko'rish</button></td></tr>
+              <tr><td><b>Malika Tosheva</b></td><td>Dr. Nazarova</td><td>09:30</td><td><span class="b b-b">Tugallandi</span></td><td><button class="btn btn-sm btn-ol" onclick="showInfo('#002','Dr. Nazarova','09:30','Qon bosimi')">Ko'rish</button></td></tr>
+              <tr><td><b>Dilnoza Umarova</b></td><td>Dr. Yusupov</td><td>10:30</td><td><span class="b b-o">Kutilmoqda</span></td><td class="act"><button class="btn btn-sm btn-gn" onclick="adminConfirm(this)">✓ Tasdiqlash</button><button class="btn btn-sm btn-rd" onclick="adminCancel(this)">Bekor</button></td></tr>
+              <tr><td><b>Sarvar Normatov</b></td><td>Dr. Nazarova</td><td>14:00</td><td><span class="b b-x">Ro'yxatda</span></td><td class="act"><button class="btn btn-sm btn-gn" onclick="adminConfirm(this)">✓ Tasdiqlash</button><button class="btn btn-sm btn-rd" onclick="adminCancel(this)">Bekor</button></td></tr>
+            </table>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="g3">
+              <div class="fcard" style="text-align:center;padding:15px">
+                <div style="font-size:1.7rem;margin-bottom:5px">🖥️</div>
+                <div style="font-weight:800;font-size:.82rem">Server</div>
+                <span class="b b-g" style="margin-top:6px;display:inline-block">Ishlayapti</span>
+                <div style="font-size:.71rem;color:var(--mu);margin-top:5px">Uptime: 99.8%</div>
+              </div>
+              <div class="fcard" style="text-align:center;padding:15px">
+                <div style="font-size:1.7rem;margin-bottom:5px">👥</div>
+                <div style="font-weight:800;font-size:.82rem">Online</div>
+                <div style="font-size:1.6rem;font-weight:900;color:var(--gr)">23</div>
+                <div style="font-size:.71rem;color:var(--mu)">Hozir tizimda</div>
+              </div>
+              <div class="fcard" style="text-align:center;padding:15px">
+                <div style="font-size:1.7rem;margin-bottom:5px">💾</div>
+                <div style="font-weight:800;font-size:.82rem">Zaxira</div>
+                <span class="b b-g" style="margin-top:6px;display:inline-block">Sog'lom</span>
+                <div style="font-size:.71rem;color:var(--mu);margin-top:5px">Bugun 03:00</div>
+              </div>
+            </div>
+            <div class="fcard">
+              <h3 style="margin-bottom:10px">📊 Bugungi yuklama</h3>
+              <div class="cbars" style="padding:6px 0">
+                <div class="cbar-row"><div class="cbar-lbl">Kardiolog</div><div class="cbar-bg"><div class="cbar-f" style="width:85%"></div></div><div class="cbar-val">17</div></div>
+                <div class="cbar-row"><div class="cbar-lbl">Terapevt</div><div class="cbar-bg"><div class="cbar-f" style="width:70%"></div></div><div class="cbar-val">14</div></div>
+                <div class="cbar-row"><div class="cbar-lbl">Jarroх</div><div class="cbar-bg"><div class="cbar-f" style="width:40%"></div></div><div class="cbar-val">8</div></div>
+                <div class="cbar-row"><div class="cbar-lbl">Okulist</div><div class="cbar-bg"><div class="cbar-f" style="width:20%"></div></div><div class="cbar-val">4</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A: BARCHA NAVBATLAR -->
+      <div class="pg" id="pg-an">
+        <div class="ph"><div><h2>Barcha navbatlar</h2><p>Tizimda ro'yxatga olingan navbatlar</p></div><button class="btn btn-p" onclick="openModal('mAddNav')">+ Qo'shish</button></div>
+        <div class="sbar">
+          <input class="sinp" placeholder="Bemor, shifokor, sana..." oninput="filterRows('navTbl',this.value)">
+          <select class="sinp-s" onchange="filterByStatus('navTbl',this.value)"><option value="">Barcha holat</option><option>Kutilmoqda</option><option>Tasdiqlangan</option><option>Tugallandi</option><option>Bekor qilingan</option></select>
+        </div>
+        <div class="card">
+          <table id="navTbl">
+            <tr><th>#</th><th>Bemor</th><th>Shifokor</th><th>Sana & Vaqt</th><th>Holat</th><th>Amallar</th></tr>
+            <tr class="tr"><td>#047</td><td><b>Aziz Karimov</b></td><td>Dr. Yusupov</td><td>23.03.2026 · 09:00</td><td><span class="b b-b status">Tugallandi</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="showInfo('#047','Dr. Yusupov','09:00','Yurak og\'rig\'i')">Ko'rish</button></td></tr>
+            <tr class="tr"><td>#046</td><td><b>Malika Tosheva</b></td><td>Dr. Nazarova</td><td>23.03.2026 · 09:30</td><td><span class="b b-b status">Tugallandi</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="showInfo('#046','Dr. Nazarova','09:30','Qon bosimi')">Ko'rish</button></td></tr>
+            <tr class="tr"><td>#045</td><td><b>Dilnoza Umarova</b></td><td>Dr. Yusupov</td><td>23.03.2026 · 10:30</td><td><span class="b b-o status">Kutilmoqda</span></td><td class="act"><button class="btn btn-sm btn-gn" onclick="adminConfirm(this)">✓ Tasdiqlash</button><button class="btn btn-sm btn-rd" onclick="adminCancel(this)">Bekor</button></td></tr>
+            <tr class="tr"><td>#044</td><td><b>Sarvar Normatov</b></td><td>Dr. Nazarova</td><td>23.03.2026 · 14:00</td><td><span class="b b-x status">Ro'yxatda</span></td><td class="act"><button class="btn btn-sm btn-gn" onclick="adminConfirm(this)">✓ Tasdiqlash</button><button class="btn btn-sm btn-rd" onclick="adminCancel(this)">Bekor</button></td></tr>
+            <tr class="tr"><td>#040</td><td><b>Jamshid Rahimov</b></td><td>Dr. Xoliqov</td><td>22.03.2026 · 08:00</td><td><span class="b b-g status">Tasdiqlangan</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="showInfo('#040','Dr. Xoliqov','08:00','Appenditsit tekshiruvi')">Ko'rish</button><button class="btn btn-sm btn-rd" onclick="adminCancel(this)">Bekor</button></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- A: BEMORLAR -->
+      <div class="pg" id="pg-ab">
+        <div class="ph"><div><h2>Bemorlar</h2><p>Barcha ro'yxatga olingan bemorlar</p></div><button class="btn btn-p" onclick="openModal('mAddPat')">+ Yangi bemor</button></div>
+        <div class="sbar"><input class="sinp" placeholder="Ism, telefon..." oninput="filterRows('patTbl',this.value)"></div>
+        <div class="card">
+          <table id="patTbl">
+            <tr><th>ID</th><th>Ism Familiya</th><th>Tug'ilgan</th><th>Telefon</th><th>So'nggi tashrif</th><th>Holat</th><th>Amallar</th></tr>
+            <tr class="tr"><td>#P001</td><td><b>Aziz Karimov</b></td><td>15.05.1990</td><td>+998901234567</td><td>23.03.2026</td><td><span class="b b-g status">Faol</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="openPatAdmin('Aziz Karimov','15.05.1990','Erkak','+998901234567','Toshkent')">Ko'rish</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Tahrirlash oynasi')">Tahrir</button><button class="btn btn-sm btn-rd" onclick="deletePat(this,'Aziz Karimov')">O'chirish</button></td></tr>
+            <tr class="tr"><td>#P002</td><td><b>Malika Tosheva</b></td><td>22.08.1985</td><td>+998931112233</td><td>22.03.2026</td><td><span class="b b-g status">Faol</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="openPatAdmin('Malika Tosheva','22.08.1985','Ayol','+998931112233','Toshkent')">Ko'rish</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Tahrirlash oynasi')">Tahrir</button><button class="btn btn-sm btn-rd" onclick="deletePat(this,'Malika Tosheva')">O'chirish</button></td></tr>
+            <tr class="tr"><td>#P003</td><td><b>Jamshid Rahimov</b></td><td>10.12.1998</td><td>+998971231234</td><td>18.03.2026</td><td><span class="b b-o status">Kutilmoqda</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="openPatAdmin('Jamshid Rahimov','10.12.1998','Erkak','+998971231234','Samarqand')">Ko'rish</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Tahrirlash oynasi')">Tahrir</button><button class="btn btn-sm btn-rd" onclick="deletePat(this,'Jamshid Rahimov')">O'chirish</button></td></tr>
+            <tr class="tr"><td>#P004</td><td><b>Dilnoza Umarova</b></td><td>03.03.1975</td><td>+998909876543</td><td>10.03.2026</td><td><span class="b b-x status">Arxiv</span></td><td class="act"><button class="btn btn-sm btn-ol" onclick="openPatAdmin('Dilnoza Umarova','03.03.1975','Ayol','+998909876543','Namangan')">Ko'rish</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Tahrirlash oynasi')">Tahrir</button><button class="btn btn-sm btn-rd" onclick="deletePat(this,'Dilnoza Umarova')">O'chirish</button></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- A: SHIFOKORLAR -->
+      <div class="pg" id="pg-ash">
+        <div class="ph"><div><h2>Shifokorlar</h2><p>Poliklinika shifokorlari</p></div><button class="btn btn-p" onclick="openModal('mAddDoc')">+ Yangi shifokor</button></div>
+        <div class="g4">
+          <div class="dc"><div class="dav">YA</div><h4>Dr. Yusupov A.</h4><p>Kardiolog · Xona 205</p><span class="b b-g" style="display:inline-block;margin:6px 0">Faol</span><div style="font-size:.74rem;color:var(--mu);margin-bottom:12px">12 yil · ★ 4.9</div><div class="act" style="justify-content:center"><button class="btn btn-sm btn-ol" onclick="openDocAdmin('Dr. Yusupov Alisher','Kardiolog','205','12','4.9','Faol')">Profil</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Dr. Yusupov tahrirlash')">Tahrir</button></div></div>
+          <div class="dc"><div class="dav" style="background:linear-gradient(135deg,#e74c6e,#f5a623)">NZ</div><h4>Dr. Nazarova Z.</h4><p>Terapevt · Xona 102</p><span class="b b-g" style="display:inline-block;margin:6px 0">Faol</span><div style="font-size:.74rem;color:var(--mu);margin-bottom:12px">8 yil · ★ 4.7</div><div class="act" style="justify-content:center"><button class="btn btn-sm btn-ol" onclick="openDocAdmin('Dr. Nazarova Zilola','Terapevt','102','8','4.7','Faol')">Profil</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Dr. Nazarova tahrirlash')">Tahrir</button></div></div>
+          <div class="dc"><div class="dav" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">XB</div><h4>Dr. Xoliqov B.</h4><p>Jarroх · Xona 310</p><span class="b b-g" style="display:inline-block;margin:6px 0">Faol</span><div style="font-size:.74rem;color:var(--mu);margin-bottom:12px">15 yil · ★ 5.0</div><div class="act" style="justify-content:center"><button class="btn btn-sm btn-ol" onclick="openDocAdmin('Dr. Xoliqov Bobur','Jarroх','310','15','5.0','Faol')">Profil</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Dr. Xoliqov tahrirlash')">Tahrir</button></div></div>
+          <div class="dc"><div class="dav" style="background:linear-gradient(135deg,#00b894,#55efc4)">KM</div><h4>Dr. Karimova M.</h4><p>Nevropatolog · Xona 412</p><span class="b b-o" style="display:inline-block;margin:6px 0">Ta'tilda</span><div style="font-size:.74rem;color:var(--mu);margin-bottom:12px">6 yil · ★ 4.6</div><div class="act" style="justify-content:center"><button class="btn btn-sm btn-ol" onclick="openDocAdmin('Dr. Karimova Maftuna','Nevropatolog','412','6','4.6','Ta\'tilda')">Profil</button><button class="btn btn-sm btn-gn" onclick="toast('✏️ Dr. Karimova tahrirlash')">Tahrir</button></div></div>
+        </div>
+      </div>
+
+      <!-- A: STATISTIKA -->
+      <div class="pg" id="pg-ast">
+        <div class="ph"><div><h2>Statistika</h2><p>Mart 2026 · Poliklinika ko'rsatkichlari</p></div><button class="btn btn-p" onclick="exportStat()">⬇ Hisobot</button></div>
+        <div class="stats">
+          <div class="sc"><div class="sci sc-g"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>1,248</h3><span>Jami bemorlar</span><small class="up">↑ +12%</small></div>
+          <div class="sc"><div class="sci sc-o"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/></svg></div><h3>892</h3><span>Oylik navbatlar</span><small class="up">↑ +7%</small></div>
+          <div class="sc"><div class="sci sc-r"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg></div><h3>312</h3><span>Retseptlar</span><small class="up">↑ +5%</small></div>
+          <div class="sc"><div class="sci sc-p"></div><h3>94%</h3><span>Tashrif koeffitsienti</span><small class="up">↑ +2%</small></div>
+        </div>
+        <div class="g2">
+          <div class="fcard"><h3>📈 Mutaxassislik bo'yicha</h3><div class="cbars"><div class="cbar-row"><div class="cbar-lbl">Kardiolog</div><div class="cbar-bg"><div class="cbar-f" style="width:90%"></div></div><div class="cbar-val">241</div></div><div class="cbar-row"><div class="cbar-lbl">Terapevt</div><div class="cbar-bg"><div class="cbar-f" style="width:74%"></div></div><div class="cbar-val">198</div></div><div class="cbar-row"><div class="cbar-lbl">Jarroх</div><div class="cbar-bg"><div class="cbar-f" style="width:55%"></div></div><div class="cbar-val">147</div></div><div class="cbar-row"><div class="cbar-lbl">Nevropatolog</div><div class="cbar-bg"><div class="cbar-f" style="width:42%"></div></div><div class="cbar-val">112</div></div><div class="cbar-row"><div class="cbar-lbl">Okulist</div><div class="cbar-bg"><div class="cbar-f" style="width:30%"></div></div><div class="cbar-val">79</div></div></div></div>
+          <div class="fcard"><h3>📅 Haftalik dinamika</h3><div class="cbars"><div class="cbar-row"><div class="cbar-lbl">Dushanba</div><div class="cbar-bg"><div class="cbar-f" style="width:80%"></div></div><div class="cbar-val">48</div></div><div class="cbar-row"><div class="cbar-lbl">Seshanba</div><div class="cbar-bg"><div class="cbar-f" style="width:65%"></div></div><div class="cbar-val">39</div></div><div class="cbar-row"><div class="cbar-lbl">Chorshanba</div><div class="cbar-bg"><div class="cbar-f" style="width:90%"></div></div><div class="cbar-val">54</div></div><div class="cbar-row"><div class="cbar-lbl">Payshanba</div><div class="cbar-bg"><div class="cbar-f" style="width:70%"></div></div><div class="cbar-val">42</div></div><div class="cbar-row"><div class="cbar-lbl">Juma</div><div class="cbar-bg"><div class="cbar-f" style="width:55%"></div></div><div class="cbar-val">33</div></div></div></div>
+        </div>
+      </div>
+
+      <!-- A: SOZLAMALAR -->
+      <div class="pg" id="pg-aso">
+        <div class="ph"><div><h2>Tizim sozlamalari</h2><p>Admin va poliklinika sozlamalari</p></div></div>
+        <div class="g2">
+          <div class="fcard"><h3>🏥 Poliklinika ma'lumotlari</h3>
+            <div class="fg"><label>Poliklinika nomi</label><input type="text" value="1-son Shahar Poliklinikasi"></div>
+            <div class="fg"><label>Manzil</label><input type="text" value="Toshkent sh., Mirzo Ulug'bek t."></div>
+            <div class="fg"><label>Ish vaqti</label><input type="text" value="Du-Ju: 08:00–18:00, Sha: 09:00–14:00"></div>
+            <div class="fg"><label>Telefon</label><input type="tel" value="+998712345678"></div>
+            <button class="btn btn-p" onclick="toast('✅ Poliklinika ma\'lumotlari saqlandi!')">Saqlash ✓</button>
+          </div>
+          <div class="fcard"><h3>🔔 Bildirishnomalar</h3>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">SMS xabarnomalar</span><div class="sw on" onclick="toggleSw(this)"><div class="sw-dot"></div></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">Email xabarnomalar</span><div class="sw off" onclick="toggleSw(this)"><div class="sw-dot"></div></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">Navbat eslatmasi</span><div class="sw on" onclick="toggleSw(this)"><div class="sw-dot"></div></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:700">Kunlik hisobot</span><div class="sw off" onclick="toggleSw(this)"><div class="sw-dot"></div></div></div>
+            </div>
+          </div>
+          <div class="fcard"><h3>🔐 Admin paroli</h3>
+            <div class="fg"><label>Joriy parol</label><input type="password" placeholder="••••••••"></div>
+            <div class="fg"><label>Yangi parol</label><input type="password" placeholder="••••••••"></div>
+            <div class="fg"><label>Tasdiqlash</label><input type="password" placeholder="••••••••"></div>
+            <button class="btn btn-p" onclick="toast('🔐 Parol muvaffaqiyatli o\'zgartirildi!')">Yangilash ✓</button>
+          </div>
+          <div class="fcard"><h3>🗄️ Ma'lumotlar zaxirasi</h3>
+            <div style="padding:13px;background:rgba(10,110,94,.07);border-radius:10px;margin-bottom:12px"><div style="font-weight:800;font-size:.88rem">Oxirgi zaxira</div><div style="font-size:.79rem;color:var(--mu);margin-top:2px">23.03.2026 · 03:00:00</div></div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <button class="btn btn-p" onclick="doBackup()">🗄️ Hozir zaxiralash</button>
+              <button class="btn btn-ol" onclick="toast('📤 Eksport tayyorlanmoqda...')">📤 Ma'lumotlarni eksport</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /wrap -->
+</div><!-- /pgApp -->
+
+<!-- ======== MODALS ======== -->
+
+<!-- Navbat olish modali -->
+<div class="ov" id="mBook">
+  <div class="modal">
+    <h3>📅 Navbatni tasdiqlash</h3>
+    <p style="color:var(--mu);font-size:.85rem;margin-bottom:16px">Shifokor: <b id="mBookDoc"></b></p>
+    <div class="fg"><label>Tanlangan vaqt</label><input id="mBookTime" type="text" readonly style="background:var(--bg)"></div>
+    <div class="fg"><label>Shikoyat / Muammo</label><textarea id="mBookComp" placeholder="Qisqacha yozing..."></textarea></div>
+    <div class="fg"><label>Aloqa telefoni</label><input type="tel" value="+998901234567"></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mBook')">Bekor</button><button class="btn btn-p" onclick="confirmBook()">Tasdiqlash ✓</button></div>
+  </div>
+</div>
+
+<!-- Ma'lumot ko'rish -->
+<div class="ov" id="mInfo">
+  <div class="modal">
+    <h3>ℹ️ Tafsilotlar</h3>
+    <div id="mInfoBody"></div>
+    <div class="m-act"><button class="btn btn-p" onclick="closeModal('mInfo')">Yopish</button></div>
+  </div>
+</div>
+
+<!-- Baholash -->
+<div class="ov" id="mRate">
+  <div class="modal" style="text-align:center">
+    <h3>⭐ Shifokorni baholash</h3>
+    <p style="color:var(--mu);font-size:.85rem;margin-bottom:18px">Shifokor: <b id="mRateDoc"></b></p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:18px" id="starRow">
+      <span style="font-size:2.2rem;cursor:pointer;transition:transform .15s" onmouseover="hoverStar(1)" onclick="clickStar(1)">☆</span>
+      <span style="font-size:2.2rem;cursor:pointer;transition:transform .15s" onmouseover="hoverStar(2)" onclick="clickStar(2)">☆</span>
+      <span style="font-size:2.2rem;cursor:pointer;transition:transform .15s" onmouseover="hoverStar(3)" onclick="clickStar(3)">☆</span>
+      <span style="font-size:2.2rem;cursor:pointer;transition:transform .15s" onmouseover="hoverStar(4)" onclick="clickStar(4)">☆</span>
+      <span style="font-size:2.2rem;cursor:pointer;transition:transform .15s" onmouseover="hoverStar(5)" onclick="clickStar(5)">☆</span>
+    </div>
+    <div class="fg"><textarea placeholder="Izoh qoldiring (ixtiyoriy)..."></textarea></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mRate')">Bekor</button><button class="btn btn-p" onclick="submitRate()">Yuborish</button></div>
+  </div>
+</div>
+
+<!-- Retsept yozish -->
+<div class="ov" id="mWriteRec">
+  <div class="modal">
+    <h3>💊 Yangi retsept yozish</h3>
+    <div class="fg"><label>Bemor</label><select><option>Aziz Karimov</option><option>Malika Tosheva</option><option>Sarvar Normatov</option><option>Nodira Xasanova</option><option>Bobur Mirzayev</option></select></div>
+    <div class="fg"><label>Tashxis (ICD-10)</label><input type="text" placeholder="Masalan: O'tkir bronxit J20"></div>
+    <div class="frow"><div class="fg"><label>Dori 1</label><input type="text" placeholder="Dori nomi"></div><div class="fg"><label>Dozasi</label><input type="text" placeholder="500mg · 3×1 · 7 kun"></div></div>
+    <div class="frow"><div class="fg"><label>Dori 2</label><input type="text" placeholder="Dori nomi (ixtiyoriy)"></div><div class="fg"><label>Dozasi</label><input type="text" placeholder="..."></div></div>
+    <div class="fg"><label>Izoh</label><textarea placeholder="Qo'shimcha ko'rsatmalar..."></textarea></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mWriteRec')">Bekor</button><button class="btn btn-p" onclick="saveRec()">Saqlash ✓</button></div>
+  </div>
+</div>
+
+<!-- Bemor kartasi (shifokor) -->
+<div class="ov" id="mPatCard">
+  <div class="modal">
+    <h3>👤 Bemor kartasi</h3>
+    <div id="mPatCardBody"></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mPatCard')">Yopish</button><button class="btn btn-p" onclick="closeModal('mPatCard');openModal('mWriteRec')">💊 Retsept yozish</button></div>
+  </div>
+</div>
+
+<!-- Retsept ko'rish -->
+<div class="ov" id="mViewRec">
+  <div class="modal">
+    <h3>💊 Retsept tafsiloti</h3>
+    <div id="mViewRecBody"></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mViewRec')">Yopish</button><button class="btn btn-p" onclick="toast('⬇ Retsept yuklanmoqda...');closeModal('mViewRec')">⬇ Yuklab olish</button></div>
+  </div>
+</div>
+
+<!-- Jadval tahrirlash -->
+<div class="ov" id="mJadval">
+  <div class="modal">
+    <h3>📅 Jadval sozlash</h3>
+    <div class="fg"><label>Dushanba</label><input type="text" value="08:00–14:00"></div>
+    <div class="fg"><label>Chorshanba</label><input type="text" value="08:00–14:00"></div>
+    <div class="fg"><label>Payshanba</label><input type="text" value="08:00–14:00"></div>
+    <div class="fg"><label>Juma</label><input type="text" value="08:00–14:00"></div>
+    <div class="fg"><label>Shanba</label><input type="text" value="09:00–12:00"></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mJadval')">Bekor</button><button class="btn btn-p" onclick="toast('✅ Jadval saqlandi!');closeModal('mJadval')">Saqlash ✓</button></div>
+  </div>
+</div>
+
+<!-- Bemor qo'shish (admin) -->
+<div class="ov" id="mAddPat">
+  <div class="modal">
+    <h3>➕ Yangi bemor qo'shish</h3>
+    <div class="frow"><div class="fg"><label>Ism</label><input id="npName" type="text" placeholder="Ism"></div><div class="fg"><label>Familiya</label><input id="npSname" type="text" placeholder="Familiya"></div></div>
+    <div class="frow"><div class="fg"><label>Tug'ilgan sana</label><input type="date"></div><div class="fg"><label>Jins</label><select><option>Erkak</option><option>Ayol</option></select></div></div>
+    <div class="fg"><label>Telefon</label><input type="tel" placeholder="+998 xx xxx xx xx"></div>
+    <div class="fg"><label>Manzil</label><input type="text" placeholder="Shahar, tuman..."></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mAddPat')">Bekor</button><button class="btn btn-p" onclick="saveNewPat()">Saqlash ✓</button></div>
+  </div>
+</div>
+
+<!-- Shifokor qo'shish (admin) -->
+<div class="ov" id="mAddDoc">
+  <div class="modal">
+    <h3>👨‍⚕️ Yangi shifokor qo'shish</h3>
+    <div class="frow"><div class="fg"><label>Ism</label><input type="text" placeholder="Ism"></div><div class="fg"><label>Familiya</label><input type="text" placeholder="Familiya"></div></div>
+    <div class="fg"><label>Mutaxassislik</label><select><option>Kardiolog</option><option>Terapevt</option><option>Jarroх</option><option>Nevropatolog</option><option>Okulist</option><option>Stomatolog</option></select></div>
+    <div class="frow"><div class="fg"><label>Tajriba (yil)</label><input type="number" placeholder="5"></div><div class="fg"><label>Xona</label><input type="text" placeholder="101"></div></div>
+    <div class="fg"><label>Telefon</label><input type="tel" placeholder="+998 xx xxx xx xx"></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mAddDoc')">Bekor</button><button class="btn btn-p" onclick="toast('✅ Yangi shifokor qo\'shildi!');closeModal('mAddDoc')">Saqlash ✓</button></div>
+  </div>
+</div>
+
+<!-- Navbat qo'shish (admin) -->
+<div class="ov" id="mAddNav">
+  <div class="modal">
+    <h3>📅 Yangi navbat qo'shish</h3>
+    <div class="fg"><label>Bemor</label><select><option>Aziz Karimov</option><option>Malika Tosheva</option><option>Jamshid Rahimov</option><option>Dilnoza Umarova</option></select></div>
+    <div class="fg"><label>Shifokor</label><select><option>Dr. Yusupov Alisher</option><option>Dr. Nazarova Zilola</option><option>Dr. Xoliqov Bobur</option></select></div>
+    <div class="frow"><div class="fg"><label>Sana</label><input type="date"></div><div class="fg"><label>Vaqt</label><input type="time" value="09:00"></div></div>
+    <div class="m-act"><button class="btn btn-ol" onclick="closeModal('mAddNav')">Bekor</button><button class="btn btn-p" onclick="toast('✅ Navbat qo\'shildi!');closeModal('mAddNav')">Saqlash ✓</button></div>
+  </div>
+</div>
+
+<!-- Bemor profili (admin) -->
+<div class="ov" id="mPatAdmin">
+  <div class="modal"><h3>👤 Bemor profili</h3><div id="mPatAdminBody"></div><div class="m-act"><button class="btn btn-p" onclick="closeModal('mPatAdmin')">Yopish</button></div></div>
+</div>
+
+<!-- Shifokor profili (admin) -->
+<div class="ov" id="mDocAdmin">
+  <div class="modal"><h3>🩺 Shifokor profili</h3><div id="mDocAdminBody"></div><div class="m-act"><button class="btn btn-p" onclick="closeModal('mDocAdmin')">Yopish</button></div></div>
+</div>
+
+<!-- Tasdiqlash dialogi -->
+<div class="ov" id="mConfirm">
+  <div class="conf-box">
+    <h4 id="confTitle">Tasdiqlaysizmi?</h4>
+    <p id="confMsg">Bu amalni bajarishni istaysizmi?</p>
+    <div class="act" style="justify-content:center"><button class="btn btn-ol" onclick="doConf(false)">Bekor</button><button class="btn btn-rd" id="confBtn" onclick="doConf(true)">Ha</button></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ============ STATE ============
+var curRole = 'patient';
+var curTab  = 'patient';
+var selSlots = {};
+var confCb = null;
+var chosenStar = 0;
+
+var ROLES = {
+  patient: {name:'Aziz Karimov', av:'AK', badge:'Bemor', bc:'rgba(41,128,185,.12)', tc:'#2980b9'},
+  doctor:  {name:'Dr. Yusupov A.', av:'YA', badge:'Shifokor', bc:'rgba(10,110,94,.12)', tc:'#0a6e5e'},
+  admin:   {name:'Administrator', av:'AD', badge:'Admin', bc:'rgba(108,92,231,.12)', tc:'#6c5ce7'}
+};
+
+// ============ SIDEBAR CONFIG ============
+var SB = {
+  patient: [
+    {lbl:'Asosiy', items:[
+      {icon:'grid', txt:'Bosh sahifa', pg:'bd'},
+      {icon:'cal',  txt:'Navbat olish', pg:'bn', badge:'Yangi'},
+      {icon:'list', txt:'Navbatlarim', pg:'bm'},
+      {icon:'doc',  txt:'Retseptlarim', pg:'br'},
+      {icon:'user', txt:'Profilim', pg:'bp'}
+    ]}
+  ],
+  doctor: [
+    {lbl:'Shifokor paneli', items:[
+      {icon:'grid', txt:'Bosh sahifa', pg:'dd'},
+      {icon:'doc',  txt:'Retseptlar', pg:'dr'},
+      {icon:'cal',  txt:'Mening jadvalim', pg:'dj'},
+      {icon:'user', txt:'Profilim', pg:'dp'}
+    ]}
+  ],
+  admin: [
+    {lbl:'Bosh panel', items:[
+      {icon:'grid', txt:'Dashboard', pg:'ad'},
+      {icon:'cal',  txt:'Barcha navbatlar', pg:'an', badge:'47'}
+    ]},
+    {lbl:'Boshqaruv', items:[
+      {icon:'users', txt:'Bemorlar', pg:'ab'},
+      {icon:'doc2',  txt:'Shifokorlar', pg:'ash'},
+      {icon:'chart', txt:'Statistika', pg:'ast'},
+      {icon:'gear',  txt:'Sozlamalar', pg:'aso'}
+    ]}
+  ]
+};
+
+var ICONS = {
+  grid:  '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  cal:   '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  list:  '<svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor"/><circle cx="3" cy="12" r="1" fill="currentColor"/><circle cx="3" cy="18" r="1" fill="currentColor"/></svg>',
+  doc:   '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>',
+  user:  '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>',
+  users: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  doc2:  '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M12 14c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4z"/><line x1="17" y1="10" x2="22" y2="10"/><line x1="19" y1="8" x2="19" y2="12"/></svg>',
+  chart: '<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  gear:  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
+};
+
+// ============ BUILD SIDEBAR ============
+function buildSB(role) {
+  var sb = document.getElementById('sb');
+  var html = '';
+  SB[role].forEach(function(sec) {
+    html += '<div class="sb-lbl">' + sec.lbl + '</div>';
+    sec.items.forEach(function(item) {
+      html += '<div class="sb-it" id="sbi-' + item.pg + '" onclick="nav(\'' + item.pg + '\')">' +
+        ICONS[item.icon] + '<span>' + item.txt + '</span>' +
+        (item.badge ? '<span class="sb-badge">' + item.badge + '</span>' : '') +
+        '</div>';
+    });
+  });
+  sb.innerHTML = html;
+}
+
+// ============ LOGIN / LOGOUT ============
+function setTab(t) {
+  curTab = t;
+  ['b','d','a'].forEach(function(x) { document.getElementById('tab-'+x).classList.remove('on'); });
+  document.getElementById('tab-' + t[0]).classList.add('on');
+  var v = {patient:'+998901234567', doctor:'doctor@enavbat.uz', admin:'admin@enavbat.uz'};
+  document.getElementById('l-inp').value = v[t];
+}
+
+function doLogin() {
+  curRole = curTab;
+  var u = ROLES[curRole];
+  // Show app
+  document.getElementById('pgLogin').style.display = 'none';
+  document.getElementById('pgApp').style.display = 'block';
+  // Header
+  document.getElementById('hName').textContent = u.name;
+  document.getElementById('hAv').textContent = u.av;
+  var rb = document.getElementById('hRoleBadge');
+  rb.textContent = u.badge;
+  rb.style.background = u.bc;
+  rb.style.color = u.tc;
+  // Sidebar + first page
+  buildSB(curRole);
+  var first = {patient:'bd', doctor:'dd', admin:'ad'}[curRole];
+  nav(first);
+  // Calendars
+  buildCal('cal1'); buildCal('cal2');
+  toast('👋 Xush kelibsiz, ' + u.name + '!');
+}
+
+function doLogout() {
+  document.getElementById('pgApp').style.display = 'none';
+  document.getElementById('pgLogin').style.display = 'flex';
+  closeAllModals();
+  toast('👋 Tizimdan chiqdingiz');
+}
+
+// ============ PAGE NAVIGATION ============
+function nav(pgId) {
+  // Hide all pages
+  var pages = document.querySelectorAll('.pg');
+  for (var i = 0; i < pages.length; i++) pages[i].classList.remove('on');
+  // Deactivate all sidebar items
+  var items = document.querySelectorAll('.sb-it');
+  for (var i = 0; i < items.length; i++) items[i].classList.remove('on');
+  // Show target page
+  var pg = document.getElementById('pg-' + pgId);
+  if (pg) pg.classList.add('on');
+  // Activate sidebar item
+  var sbi = document.getElementById('sbi-' + pgId);
+  if (sbi) sbi.classList.add('on');
+  // Close notif panel
+  document.getElementById('notifPanel').classList.remove('on');
+}
+
+// ============ CALENDAR ============
+function buildCal(id) {
+  var wrap = document.getElementById(id);
+  if (!wrap) return;
+  var days = ['Du','Se','Ch','Pa','Ju','Sh','Ya'];
+  var evDays = [3,8,10,15,17,22,25,28];
+  var html = '';
+  days.forEach(function(d) { html += '<div class="cal-dl">' + d + '</div>'; });
+  // March 2026 offset = 6 (starts Sunday in Mon-based grid)
+  for (var i = 0; i < 6; i++) html += '<div class="cal-d om">' + (25+i) + '</div>';
+  for (var d = 1; d <= 31; d++) {
+    var cls = d === 23 ? 'today' : (evDays.indexOf(d) >= 0 ? 'ev' : '');
+    html += '<div class="cal-d ' + cls + '" onclick="toast(\'📅 ' + d + ' Mart 2026\')">' + d + '</div>';
+  }
+  wrap.innerHTML = html;
+}
+
+// ============ SLOTS ============
+function pickSlot(el, doc, time) {
+  var slots = document.querySelectorAll('#sl-' + doc + ' .slot:not(.taken)');
+  for (var i = 0; i < slots.length; i++) slots[i].classList.remove('on');
+  el.classList.add('on');
+  selSlots[doc] = time;
+  toast('🕐 ' + time + ' tanlandi');
+}
+
+function pickSpec(el, name) {
+  var specs = document.querySelectorAll('#specGrid .slot');
+  for (var i = 0; i < specs.length; i++) specs[i].classList.remove('on');
+  el.classList.add('on');
+  toast('✅ ' + name + ' mutaxassisligi tanlandi');
+}
+
+// ============ BOOK MODAL ============
+function openBook(docName, key) {
+  document.getElementById('mBookDoc').textContent = docName;
+  document.getElementById('mBookTime').value = selSlots[key] || '— (vaqt tanlanmagan)';
+  document.getElementById('mBookComp').value = '';
+  openModal('mBook');
+}
+
+function confirmBook() {
+  var c = document.getElementById('mBookComp').value.trim();
+  if (!c) { toast('⚠️ Iltimos shikoyatni kiriting'); return; }
+  closeModal('mBook');
+  toast('✅ Navbat muvaffaqiyatli tasdiqlandi!');
+  setTimeout(function() { nav('bm'); }, 700);
+}
+
+// ============ INFO MODAL ============
+function showInfo(num, doc, time, complaint) {
+  document.getElementById('mInfoBody').innerHTML =
+    '<div class="irow"><label>Navbat #</label><span>' + num + '</span></div>' +
+    '<div class="irow"><label>Shifokor</label><span>' + doc + '</span></div>' +
+    '<div class="irow"><label>Vaqt</label><span>' + time + '</span></div>' +
+    '<div class="irow"><label>Shikoyat</label><span>' + complaint + '</span></div>';
+  openModal('mInfo');
+}
+
+// ============ CANCEL REC ============
+function cancelRec(btn) {
+  openConfirm('Navbatni bekor qilish', 'Ushbu navbatni bekor qilmoqchimisiz?', 'Bekor qilish', function() {
+    var row = btn.closest('tr');
+    var badge = row.querySelector('.b');
+    badge.className = 'b b-r status';
+    badge.textContent = 'Bekor qilingan';
+    var td = btn.closest('td');
+    td.innerHTML = '<button class="btn btn-sm btn-p" onclick="nav(\'bn\')">Qayta yozilish</button>';
+    toast('❌ Navbat bekor qilindi');
+  });
+}
+
+// ============ ADMIN ACTIONS ============
+function adminConfirm(btn) {
+  var row = btn.closest('tr');
+  var badge = row.querySelector('.b');
+  badge.className = 'b b-g status';
+  badge.textContent = 'Tasdiqlangan';
+  var td = btn.closest('td');
+  td.innerHTML = '<button class="btn btn-sm btn-ol" onclick="toast(\'ℹ️ Ko\'rish\')">Ko\'rish</button>';
+  toast('✅ Navbat tasdiqlandi!');
+}
+
+function adminCancel(btn) {
+  openConfirm('Navbatni bekor qilish', 'Ushbu navbatni bekor qilmoqchimisiz?', 'Bekor qilish', function() {
+    var row = btn.closest('tr');
+    var badge = row.querySelector('.b');
+    badge.className = 'b b-r status';
+    badge.textContent = 'Bekor qilingan';
+    btn.closest('td').innerHTML = '—';
+    toast('❌ Navbat bekor qilindi');
+  });
+}
+
+function deletePat(btn, name) {
+  openConfirm('Bemorni o\'chirish', '"' + name + '" ni o\'chirishni xohlaysizmi?', 'O\'chirish', function() {
+    btn.closest('tr').style.opacity = '0';
+    btn.closest('tr').style.transition = 'opacity .3s';
+    setTimeout(function() { btn.closest('tr').remove(); }, 300);
+    toast('🗑️ ' + name + ' o\'chirildi');
+  });
+}
+
+// ============ RATING ============
+function openRate(name) {
+  document.getElementById('mRateDoc').textContent = name;
+  chosenStar = 0;
+  updateStars(0);
+  openModal('mRate');
+}
+
+function hoverStar(n) {
+  var stars = document.querySelectorAll('#starRow span');
+  for (var i = 0; i < stars.length; i++) {
+    stars[i].textContent = i < n ? '⭐' : '☆';
+  }
+}
+
+function clickStar(n) {
+  chosenStar = n;
+  updateStars(n);
+}
+
+function updateStars(n) {
+  var stars = document.querySelectorAll('#starRow span');
+  for (var i = 0; i < stars.length; i++) {
+    stars[i].textContent = i < n ? '⭐' : '☆';
+  }
+}
+
+function submitRate() {
+  if (!chosenStar) { toast('⚠️ Iltimos baho bering'); return; }
+  closeModal('mRate');
+  toast('⭐ ' + chosenStar + ' yulduz berildi! Rahmat!');
+}
+
+// ============ RETSEPT ============
+function saveRec() { closeModal('mWriteRec'); toast('✅ Retsept muvaffaqiyatli yozildi!'); }
+
+function viewRec(bemor, tashxis, dorilar) {
+  var drugs = dorilar.split('\n').map(function(d) {
+    return '<div class="rdrug"><strong>' + d.trim() + '</strong></div>';
+  }).join('');
+  document.getElementById('mViewRecBody').innerHTML =
+    '<div class="irow"><label>Bemor</label><span>' + bemor + '</span></div>' +
+    '<div class="irow"><label>Tashxis</label><span>' + tashxis + '</span></div>' +
+    '<div style="margin:12px 0 6px;font-weight:800;font-size:.83rem">Dorilar:</div>' + drugs;
+  openModal('mViewRec');
+}
+
+// ============ PAT CARD (SHIFOKOR) ============
+function openPatCard(name, age, complaint, diagnosis) {
+  document.getElementById('mPatCardBody').innerHTML =
+    '<div class="irow"><label>Bemor</label><span>' + name + '</span></div>' +
+    '<div class="irow"><label>Yosh</label><span>' + age + ' yosh</span></div>' +
+    '<div class="irow"><label>Shikoyat</label><span>' + complaint + '</span></div>' +
+    '<div class="irow"><label>Tashxis</label><span>' + diagnosis + '</span></div>';
+  openModal('mPatCard');
+}
+
+function startRecep(name) {
+  toast('🩺 ' + name + ' qabuli boshlandi. Xona 205.');
+}
+
+// ============ ADMIN MODALS ============
+function openPatAdmin(name, born, gender, phone, city) {
+  document.getElementById('mPatAdminBody').innerHTML =
+    '<div class="irow"><label>Ism</label><span>' + name + '</span></div>' +
+    '<div class="irow"><label>Tug\'ilgan</label><span>' + born + '</span></div>' +
+    '<div class="irow"><label>Jins</label><span>' + gender + '</span></div>' +
+    '<div class="irow"><label>Telefon</label><span>' + phone + '</span></div>' +
+    '<div class="irow"><label>Shahar</label><span>' + city + '</span></div>';
+  openModal('mPatAdmin');
+}
+
+function openDocAdmin(name, spec, room, exp, rating, status) {
+  document.getElementById('mDocAdminBody').innerHTML =
+    '<div class="irow"><label>Ism</label><span>' + name + '</span></div>' +
+    '<div class="irow"><label>Mutaxassislik</label><span>' + spec + '</span></div>' +
+    '<div class="irow"><label>Xona</label><span>' + room + '</span></div>' +
+    '<div class="irow"><label>Tajriba</label><span>' + exp + ' yil</span></div>' +
+    '<div class="irow"><label>Baho</label><span>★ ' + rating + '</span></div>' +
+    '<div class="irow"><label>Holat</label><span>' + status + '</span></div>';
+  openModal('mDocAdmin');
+}
+
+function saveNewPat() {
+  var n = document.getElementById('npName').value.trim();
+  var s = document.getElementById('npSname').value.trim();
+  if (!n || !s) { toast('⚠️ Ism va familiyani kiriting'); return; }
+  closeModal('mAddPat');
+  toast('✅ ' + n + ' ' + s + ' qo\'shildi!');
+}
+
+// ============ MISC ============
+function exportStat() {
+  toast('📊 Hisobot tayyorlanmoqda...');
+  setTimeout(function() { toast('✅ Hisobot yuklab olindi!'); }, 1400);
+}
+
+function doBackup() {
+  toast('🗄️ Zaxiralash boshlandi...');
+  setTimeout(function() { toast('✅ Zaxira muvaffaqiyatli yaratildi!'); }, 1500);
+}
+
+function toggleSw(el) {
+  var isOn = el.classList.contains('on');
+  el.classList.toggle('on', !isOn);
+  el.classList.toggle('off', isOn);
+  toast(isOn ? '🔕 O\'chirildi' : '🔔 Yoqildi');
+}
+
+function toggleNotif() {
+  document.getElementById('notifPanel').classList.toggle('on');
+}
+
+// ============ FILTER ============
+function filterRows(tblId, val) {
+  val = val.toLowerCase();
+  var rows = document.querySelectorAll('#' + tblId + ' .tr');
+  rows.forEach(function(r) {
+    r.style.display = r.textContent.toLowerCase().indexOf(val) >= 0 ? '' : 'none';
+  });
+}
+
+function filterByStatus(tblId, val) {
+  var rows = document.querySelectorAll('#' + tblId + ' .tr');
+  rows.forEach(function(r) {
+    var st = r.querySelector('.status');
+    r.style.display = (!val || (st && st.textContent === val)) ? '' : 'none';
+  });
+}
+
+// ============ MODAL HELPERS ============
+function openModal(id) { document.getElementById(id).classList.add('on'); }
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
+function closeAllModals() {
+  document.querySelectorAll('.ov').forEach(function(o) { o.classList.remove('on'); });
+}
+
+// Close on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('ov')) e.target.classList.remove('on');
+  if (!e.target.closest('#notifPanel') && !e.target.closest('.hdr-bell')) {
+    document.getElementById('notifPanel').classList.remove('on');
+  }
+});
+
+// ============ CONFIRM ============
+function openConfirm(title, msg, btnTxt, cb) {
+  document.getElementById('confTitle').textContent = title;
+  document.getElementById('confMsg').textContent = msg;
+  document.getElementById('confBtn').textContent = btnTxt;
+  confCb = cb;
+  openModal('mConfirm');
+}
+function doConf(yes) {
+  closeModal('mConfirm');
+  if (yes && confCb) confCb();
+  confCb = null;
+}
+
+// ============ TOAST ============
+var toastTimer;
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.classList.remove('on'); }, 2800);
+}
+</script>
+</body>
+</html>
